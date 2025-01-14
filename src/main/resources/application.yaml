@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: SalaryCalculator
+
+  datasource:
+    url: jdbc:postgresql://lubaszka-test-db.c9k440gi4rfh.eu-north-1.rds.amazonaws.com:5432/lubaszk_test_db
+    username: postgres
+    password: postgres
