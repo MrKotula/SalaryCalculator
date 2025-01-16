@@ -1,4 +1,4 @@
-package com.lubaszka.salarycalculator.SalaryCalculator;
+package com.lubaszka.salarycalculator;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
