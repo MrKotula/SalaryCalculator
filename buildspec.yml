@@ -5,7 +5,12 @@ phases:
     commands:
       - echo Installing dependencies...
       - yum update -y
-      - yum install -y java-17-openjdk-devel gradle
+      - yum install -y java-17-openjdk-devel wget
+      - echo Installing Gradle 9.0.0...
+      - wget https://services.gradle.org/distributions/gradle-9.0.0-bin.zip
+      - unzip gradle-9.0.0-bin.zip -d /opt/gradle
+      - export PATH=$PATH:/opt/gradle/gradle-9.0.0/bin
+      - gradle --version
       - echo Dependencies installed
 
   pre_build:
