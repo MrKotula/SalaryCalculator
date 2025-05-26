@@ -1,6 +1,8 @@
 package com.lubaszka.salarycalculator.service.impl;
 
+import com.lubaszka.salarycalculator.model.dto.request.SalaryCalculationListRequest;
 import com.lubaszka.salarycalculator.model.dto.request.SalaryCalculationRequest;
+import com.lubaszka.salarycalculator.model.dto.request.SalaryCalculationSubRequest;
 import com.lubaszka.salarycalculator.service.HolidayService;
 import com.lubaszka.salarycalculator.service.SalaryCalculationService;
 import com.lubaszka.salarycalculator.util.SalaryCalculationUtil;
@@ -45,7 +47,10 @@ public class SalaryCalculationServiceImpl implements SalaryCalculationService {
             LocalDateTime effectiveEnd = nextHour.isAfter(endTime) ? endTime : nextHour;
             long minutesWorked = Duration.between(currentTime, effectiveEnd).toMinutes();
 
-            double currentRate = calculateHourlyRate(currentDay, holidayDays, currentHour, baseRate, nightShiftRate);
+            SalaryCalculationSubRequest salaryCalculationSubRequest = new SalaryCalculationSubRequest(
+                    currentDay, holidayDays, currentHour, baseRate, nightShiftRate);
+
+            double currentRate = calculateHourlyRate(salaryCalculationSubRequest);
 
             double hourlySalary = currentRate * (minutesWorked / MINUTES_IN_HOUR);
             totalSalary += hourlySalary;
@@ -56,8 +61,25 @@ public class SalaryCalculationServiceImpl implements SalaryCalculationService {
         return salaryCalculationUtil.roundToTwoDecimalPlaces(totalSalary);
     }
 
-    private double calculateHourlyRate(LocalDate currentDay, List<LocalDate> holidayDays, LocalTime currentHour,
-                                       double currentRate, double nightShiftRate) {
+    @Override
+    public double calculateSalaryByList(SalaryCalculationListRequest salaryCalculationRequestList) {
+        double totalSalary = 0.0;
+        List<SalaryCalculationRequest> salaryCalculationList = salaryCalculationRequestList.getSalaryCalculationRequestList();
+
+        for (SalaryCalculationRequest salaryCalculationRequest : salaryCalculationList) {
+            totalSalary += calculateSalary(salaryCalculationRequest);
+        }
+
+        return salaryCalculationUtil.roundToTwoDecimalPlaces(totalSalary);
+    }
+
+    private double calculateHourlyRate(SalaryCalculationSubRequest salaryCalculationSubRequest) {
+        LocalDate currentDay = salaryCalculationSubRequest.getCurrentDay();
+        List <LocalDate> holidayDays = salaryCalculationSubRequest.getHolidayDays();
+        LocalTime currentHour = salaryCalculationSubRequest.getCurrentHour();
+        double currentRate = salaryCalculationSubRequest.getCurrentRate();
+        double nightShiftRate = salaryCalculationSubRequest.getNightShiftRate();
+
         boolean isNightShift = salaryCalculationUtil.isNightShift(currentHour);
 
         if (isHoliday(currentDay, holidayDays)) {
