@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculate Salary</title>
+    <link rel="stylesheet" th:href="@{/calculatorList.css}">
+</head>
+
+<h1>Calculate Salary by List</h1>
+<form id="salaryForm" action="/api/lubaszka/salary/calculate_list" method="POST" th:object="${requests}">
+    <div id="salaryRequestList">
+        <div class="salaryRequest">
+            <h4>Request 1</h4>
+
+            <label for="salaryCalculationRequestList[0].startDateTime">Start Date and Time:</label><br>
+            <input type="datetime-local" id="salaryCalculationRequestList[0].startDateTime" name="salaryCalculationRequestList[0].startDateTime" required><br><br>
+
+            <label for="salaryCalculationRequestList[0].endDateTime">End Date and Time:</label><br>
+            <input type="datetime-local" id="salaryCalculationRequestList[0].endDateTime" name="salaryCalculationRequestList[0].endDateTime" required><br><br>
+
+            <label for="salaryCalculationRequestList[0].baseRate">Base Rate:</label><br>
+            <input type="number" id="salaryCalculationRequestList[0].baseRate" name="salaryCalculationRequestList[0].baseRate" step="0.1" min="0" required><br><br>
+        </div>
+    </div>
+
+    <br><br>
+    <a class="linkButton" th:href="@{/api/lubaszka/salary/calculate}">Simple calculate</a>
+    <button type="button" onclick="addRequest()">Add Salary Calculation Request</button>
+    <button type="submit">Submit</button>
+
+    <div>
+        <h2>Result</h2>
+        <p>
+            <strong>Calculated Salary:</strong>
+            <span th:text="${result != null ? result + ' zł' : ''}"></span>
+        </p>
+    </div>
+</form>
+
+<script>
+    let counter = 2;
+    const maxRequests = 10;
+
+    function addRequest() {
+        if (counter > maxRequests) {
+            alert(`You can add a maximum of ${maxRequests} requests.`);
+            return;
+        }
+
+        let requestExists = document.getElementById(`request-${counter}`);
+
+        while (requestExists) {
+            counter++;
+            if (counter > maxRequests) {
+                alert(`You can add a maximum of ${maxRequests} requests.`);
+                return;
+            }
+            requestExists = document.getElementById(`request-${counter}`);
+        }
+
+        const container = document.getElementById('salaryRequestList');
+        const newItem = `
+    <div class="salaryRequest" id="request-${counter}">
+        <h4>Request ${counter}</h4>
+
+        <label for="salaryCalculationRequestList[${counter}].startDateTime">Start Date and Time:</label><br>
+        <input type="datetime-local" id="salaryCalculationRequestList[${counter}].startDateTime" name="salaryCalculationRequestList[${counter}].startDateTime" required><br><br>
+
+        <label for="salaryCalculationRequestList[${counter}].endDateTime">End Date and Time:</label><br>
+        <input type="datetime-local" id="salaryCalculationRequestList[${counter}].endDateTime" name="salaryCalculationRequestList[${counter}].endDateTime" required><br><br>
+
+        <label for="salaryCalculationRequestList[${counter}].baseRate">Base Rate:</label><br>
+        <input type="number" id="salaryCalculationRequestList[${counter}].baseRate" name="salaryCalculationRequestList[${counter}].baseRate" step="0.1" min="0" required><br><br>
+
+        <button type="button" onclick="removeSpecificRequest('request-${counter}')">Remove</button>
+    </div>
+    `;
+        container.insertAdjacentHTML('beforeend', newItem);
+        counter++;
+    }
+
+    function removeSpecificRequest(id) {
+        const request = document.getElementById(id);
+        if (request) {
+            request.remove();
+            let requests = document.querySelectorAll('.salaryRequest');
+
+            requests.forEach((item, index) => {
+                item.querySelector('h4').textContent = `Request ${index + 1}`;
+                item.id = `request-${index + 1}`;
+
+                item.querySelectorAll('input').forEach(input => {
+                    input.id = input.id.replace(/\[\d+\]/, `[${index + 1}]`);
+                    input.name = input.name.replace(/\[\d+\]/, `[${index + 1}]`);
+                });
+            });
+            counter--;
+        }
+    }
+</script>
+</html>
