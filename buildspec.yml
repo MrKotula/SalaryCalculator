@@ -1,0 +1,38 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: openjdk17
+    commands:
+      - echo Installing dependencies...
+      - apt-get update -y
+      - apt-get install -y gradle
+      - echo Dependencies installed
+
+  pre_build:
+    commands:
+      - echo Entering pre-build phase...
+      - gradle --version
+      - echo Pre-build phase complete
+
+  build:
+    commands:
+      - echo Building the application...
+      - gradle build
+      - echo Build phase complete
+
+  post_build:
+    commands:
+      - echo Entering post-build phase...
+      - mv build/libs/my-app.jar my-app.jar
+      - echo Post-build phase complete
+
+artifacts:
+  files:
+    - my-app.jar
+  discard-paths: yes
+
+cache:
+  paths:
+    - '/root/.gradle/**/*'
