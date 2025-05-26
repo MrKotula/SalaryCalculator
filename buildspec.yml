@@ -5,11 +5,11 @@ phases:
     commands:
       - echo Installing dependencies...
       - yum update -y
-      - yum install -y java-17-openjdk-devel wget
-      - echo Installing Gradle 7.5
-      - wget https://services.gradle.org/distributions/gradle-7.5-bin.zip
-      - unzip gradle-7.5-bin.zip -d /opt/gradle
-      - export PATH=$PATH:/opt/gradle/gradle-7.5/bin
+      - yum install -y java-17-openjdk-devel wget unzip
+      - echo Installing Gradle 8.1.1...
+      - wget https://services.gradle.org/distributions/gradle-8.1.1-bin.zip
+      - unzip gradle-8.1.1-bin.zip -d /opt/gradle
+      - export PATH=$PATH:/opt/gradle/gradle-8.1.1/bin
       - gradle --version
       - echo Dependencies installed
 
