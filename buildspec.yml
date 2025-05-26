@@ -2,12 +2,10 @@ version: 0.2
 
 phases:
   install:
-    runtime-versions:
-      java: openjdk17
     commands:
       - echo Installing dependencies...
-      - apt-get update -y
-      - apt-get install -y gradle
+      - yum update -y
+      - yum install -y java-17-openjdk-devel gradle
       - echo Dependencies installed
 
   pre_build:
