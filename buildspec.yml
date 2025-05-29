@@ -29,7 +29,7 @@ phases:
   post_build:
     commands:
       - echo Entering post-build phase...
-      - mv build/libs/my-app.jar my-app.jar
+      - mv build/libs/SalaryCalculator-0.0.1-SNAPSHOT.jar my-app.jar  # Переміщуємо файл у корінь проекту
       - echo Post-build phase complete
 
 artifacts:
