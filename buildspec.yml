@@ -5,11 +5,11 @@ phases:
     commands:
       - echo Installing dependencies...
       - yum update -y
-      - yum install -y java-11-openjdk-devel wget unzip
-      - echo Installing Gradle 7.4...
-      - wget https://services.gradle.org/distributions/gradle-7.4-bin.zip
-      - unzip gradle-7.4-bin.zip -d /opt/gradle
-      - export PATH=/opt/gradle/gradle-7.4/bin:$PATH
+      - yum install -y java-17-openjdk-devel wget unzip
+      - echo Installing Gradle 7.5...
+      - wget https://services.gradle.org/distributions/gradle-7.5-bin.zip
+      - unzip gradle-7.5-bin.zip -d /opt/gradle
+      - export PATH=/opt/gradle/gradle-7.5/bin:$PATH
       - gradle --version
       - echo Dependencies installed
 
@@ -28,12 +28,12 @@ phases:
   post_build:
     commands:
       - echo Entering post-build phase...
-      - mv build/libs/SalaryCalculator-0.0.1-SNAPSHOT.jar my-app.jar
+      - mv build/libs/SalaryCalculator-0.0.1-SNAPSHOT.jar SalaryCalculator-0.0.1-SNAPSHOT.jar
       - echo Post-build phase complete
 
 artifacts:
   files:
-    - my-app.jar
+    - SalaryCalculator-0.0.1-SNAPSHOT.jar
   discard-paths: yes
 
 cache:
