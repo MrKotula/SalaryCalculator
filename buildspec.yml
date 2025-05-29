@@ -39,10 +39,10 @@ phases:
         - echo "Running tests and generating coverage report..."
         - mvn clean verify
 
-artifacts:
-  files:
-    - my-app.jar
-  discard-paths: yes
+      artifacts:
+        files:
+         - my-app.jar
+      discard-paths: yes
 
 cache:
   paths:
