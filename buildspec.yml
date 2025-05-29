@@ -33,9 +33,9 @@ phases:
         - mv build/libs/SalaryCalculator-0.0.1-SNAPSHOT.jar my-app.jar
         - echo Post-build phase complete
 
-  unit-test-job:
+    unit-test-job:
     test:
-    commands:
+      commands:
         - echo "Running tests and generating coverage report..."
         - mvn clean verify
 
