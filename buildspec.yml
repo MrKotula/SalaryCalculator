@@ -5,7 +5,7 @@ phases:
     commands:
       - echo Installing dependencies...
       - yum update -y
-      - yum install -y java-17-openjdk-devel wget unzip
+      - yum install -y java-11-openjdk-devel wget unzip
       - echo Installing Gradle 7.4...
       - wget https://services.gradle.org/distributions/gradle-7.4-bin.zip
       - unzip gradle-7.4-bin.zip -d /opt/gradle
@@ -22,7 +22,7 @@ phases:
   build:
     commands:
       - echo Building the application...
-      - gradle clean build
+      - gradle clean build --stacktrace --info
       - echo Build phase complete
 
   post_build:
