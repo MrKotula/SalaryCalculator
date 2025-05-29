@@ -6,12 +6,17 @@ phases:
       - echo Installing dependencies...
       - yum update -y
       - yum install -y java-17-openjdk-devel wget unzip
-      - echo Java 17 installed
+      - echo Installing Gradle 7.5...
+      - wget https://services.gradle.org/distributions/gradle-7.5-bin.zip
+      - unzip gradle-7.5-bin.zip -d /opt/gradle
+      - export PATH=$PATH:/opt/gradle/gradle-7.5/bin
+      - java -version
+      - gradle --version
+      - echo Dependencies installed
 
   pre_build:
     commands:
       - echo Entering pre-build phase...
-      - java -version
       - gradle --version
       - echo Pre-build phase complete
 
