@@ -5,7 +5,14 @@ phases:
     commands:
       - echo Installing dependencies...
       - yum update -y
-      - yum install -y java-17-openjdk-devel gradle
+      - yum install -y java-17-openjdk-devel wget unzip
+      - echo Installing Gradle 7.5...
+      - wget https://services.gradle.org/distributions/gradle-7.5-bin.zip
+      - unzip gradle-7.5-bin.zip -d /opt/gradle
+      - export PATH=$PATH:/opt/gradle/gradle-7.5/bin
+      - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+      - export PATH=$JAVA_HOME/bin:$PATH
+      - gradle --version
       - echo Dependencies installed
 
   pre_build:
@@ -17,13 +24,13 @@ phases:
   build:
     commands:
       - echo Building the application...
-      - gradle build
+      - gradle clean build
       - echo Build phase complete
 
   post_build:
     commands:
       - echo Entering post-build phase...
-      - mv build/libs/my-app.jar my-app.jar
+      - mv build/libs/SalaryCalculator-0.0.1-SNAPSHOT.jar my-app.jar
       - echo Post-build phase complete
 
 artifacts:
