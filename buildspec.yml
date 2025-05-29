@@ -9,7 +9,7 @@ phases:
       - echo Installing Gradle 7.5...
       - wget https://services.gradle.org/distributions/gradle-7.5-bin.zip
       - unzip gradle-7.5-bin.zip -d /opt/gradle
-      - export PATH=/opt/gradle/gradle-7.5/bin:$PATH
+      - export PATH=$PATH:/opt/gradle/gradle-7.5/bin
       - gradle --version
       - echo Dependencies installed
 
@@ -22,18 +22,18 @@ phases:
   build:
     commands:
       - echo Building the application...
-      - gradle clean build --stacktrace --info
+      - gradle clean build
       - echo Build phase complete
 
   post_build:
     commands:
       - echo Entering post-build phase...
-      - mv build/libs/SalaryCalculator-0.0.1-SNAPSHOT.jar SalaryCalculator-0.0.1-SNAPSHOT.jar
+      - mv build/libs/SalaryCalculator-0.0.1-SNAPSHOT.jar my-app.jar
       - echo Post-build phase complete
 
 artifacts:
   files:
-    - SalaryCalculator-0.0.1-SNAPSHOT.jar
+    - my-app.jar
   discard-paths: yes
 
 cache:
