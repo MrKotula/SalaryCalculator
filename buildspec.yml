@@ -44,6 +44,15 @@ phases:
          - my-app.jar
       discard-paths: yes
 
+  deploy:
+      commands:
+        - echo "Running deploy..."
+
+      artifacts:
+        files:
+          - '**/*'
+      discard-paths: yes
+
 cache:
   paths:
     - '/root/.gradle/**/*'
