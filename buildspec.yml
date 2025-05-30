@@ -4,7 +4,6 @@ phases:
   install:
     commands:
       - echo Installing dependencies...
-      - yum update -y
       - yum install -y java-17-openjdk-devel wget unzip
       - echo Installing Gradle 8.12.1...
       - wget https://services.gradle.org/distributions/gradle-8.12.1-bin.zip
@@ -27,32 +26,20 @@ phases:
       - gradle clean build
       - echo Build phase complete
 
-    post_build:
-      commands:
-        - echo Entering post-build phase...
-        - mv build/libs/SalaryCalculator-0.0.1-SNAPSHOT.jar my-app.jar
-        - echo Post-build phase complete
+  post_build:
+    commands:
+      - echo Entering post-build phase...
+      - echo Start testing...
+      - gradle test
+      - echo The tests have finished completely
+      - echo Post-build phase complete
 
-    unit-test-job:
-    test:
-      commands:
-        - echo "Running tests and generating coverage report..."
-        - mvn clean verify
-
-      artifacts:
-        files:
-         - my-app.jar
-      discard-paths: yes
-
-  deploy:
-      commands:
-        - echo "Running deploy..."
-
-      artifacts:
-        files:
-          - '**/*'
-      discard-paths: yes
+artifacts:
+  files:
+    - build/libs/SalaryCalculator-0.0.1-SNAPSHOT.jar
+  discard-paths: yes
 
 cache:
   paths:
-    - '/root/.gradle/**/*'
+    - '/root/.gradle/caches/**/*'
+    - '/root/.gradle/wrapper/**/*'

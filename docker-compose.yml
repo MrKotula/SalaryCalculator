@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16
+    container_name: salary_calculator_db
+    environment:
+      POSTGRES_USER: exampleuser
+      POSTGRES_PASSWORD: examplepassword
+      POSTGRES_DB: salarydb
+    volumes:
+      - ./src/main/resources/test_db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - salary_network
+
+  app:
+    build: .
+    container_name: salary_calculator_app
+    environment:
+      POSTG_DB_URL: jdbc:postgresql://db:5432/salarydb
+      POSTG_DB_USERNAME: exampleuser
+      POSTG_DB_PASSWORD: examplepassword
+    depends_on:
+      - db
+    ports:
+      - "8081:8081"
+    networks:
+      - salary_network
+
+networks:
+  salary_network:
+    driver: bridge
