@@ -29,20 +29,15 @@ phases:
   post_build:
     commands:
       - echo Entering post-build phase...
-      - echo Generating test reports...
+      - echo Start testing...
+      - gradle test
+      - echo The tests have finished completely
       - echo Post-build phase complete
-
-    reports:
-      junit:
-        files:
-          - 'build/test-results/test/*.xml'
-        file-format: "JUNITXML"
 
 artifacts:
   files:
     - build/libs/SalaryCalculator-0.0.1-SNAPSHOT.jar
-    - build/reports/**/*
-  discard-paths: no
+  discard-paths: yes
 
 cache:
   paths:
