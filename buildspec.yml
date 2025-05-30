@@ -35,8 +35,8 @@ phases:
     commands:
       - echo Entering post-build phase...
       - echo Pushing Docker image...
-      - docker tag salary_calculator:latest <your-docker-repo>/salary_calculator:latest
-      - docker push <your-docker-repo>/salary_calculator:latest
+      - docker tag salary_calculator:latest <mrkotula>/salary_calculator:latest
+      - docker push <mrkotula>/salary_calculator:latest
       - echo Post-build phase complete
 
 artifacts:
