@@ -32,11 +32,11 @@ phases:
       - echo Generating test reports...
       - echo Post-build phase complete
 
-  reports:
-    junit:
-      files:
-        - 'build/test-results/test/*.xml'
-      file-format: "JUNITXML"
+    reports:
+      junit:
+        files:
+          - 'build/test-results/test/*.xml'
+        file-format: "JUNITXML"
 
 artifacts:
   files:
