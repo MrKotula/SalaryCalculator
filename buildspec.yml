@@ -26,20 +26,14 @@ phases:
       - echo Building the application...
       - gradle clean build
       - echo Build phase complete
-      - echo Building Docker image...
-      - docker build -t salary_calculator .
-      - echo Docker image built successfully.
 
-  post_build:
-     commands:
-      - echo Entering post-build phase...
-      - mv build/libs/SalaryCalculator-0.0.1-SNAPSHOT.jar my-app.jar
-      - echo Post-build phase complete
-      - docker tag salary_calculator:latest <your-docker-repo>/salary_calculator:latest
-      - docker push <your-docker-repo>/salary_calculator:latest
-      - echo Post-build phase complete
+    post_build:
+      commands:
+        - echo Entering post-build phase...
+        - mv build/libs/SalaryCalculator-0.0.1-SNAPSHOT.jar my-app.jar
+        - echo Post-build phase complete
 
-  unit-test-job:
+    unit-test-job:
     test:
       commands:
         - echo "Running tests and generating coverage report..."
@@ -47,8 +41,17 @@ phases:
 
       artifacts:
         files:
+         - my-app.jar
+      discard-paths: yes
+
+  deploy:
+      commands:
+        - echo "Running deploy..."
+
+      artifacts:
+        files:
           - '**/*'
-        discard-paths: yes
+      discard-paths: yes
 
 cache:
   paths:
