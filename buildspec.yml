@@ -24,19 +24,16 @@ phases:
     commands:
       - echo Building the application...
       - gradle clean build
-      - echo Running unit tests...
-      - gradle test
-      - echo Build phase complete
       - echo Building Docker image...
       - docker build -t salary_calculator .
       - echo Docker image built successfully.
+      - echo Build phase complete
 
   post_build:
     commands:
       - echo Entering post-build phase...
-      - echo Pushing Docker image...
-      - docker tag salary_calculator:latest <mrkotula>/salary_calculator:latest
-      - docker push <mrkotula>/salary_calculator:latest
+      - echo Running unit tests...
+      - gradle test
       - echo Post-build phase complete
 
 artifacts:
