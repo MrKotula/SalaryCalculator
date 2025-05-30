@@ -5,7 +5,7 @@ phases:
     commands:
       - echo Installing dependencies...
       - yum update -y
-      - yum install -y java-17-openjdk-devel wget unzip docker
+      - yum install -y java-17-openjdk-devel wget unzip
       - echo Installing Gradle 8.12.1...
       - wget https://services.gradle.org/distributions/gradle-8.12.1-bin.zip
       - unzip gradle-8.12.1-bin.zip -d /opt/gradle
@@ -25,25 +25,30 @@ phases:
     commands:
       - echo Building the application...
       - gradle clean build
-      - echo Running unit tests...
-      - gradle test
       - echo Build phase complete
       - echo Building Docker image...
       - docker build -t salary_calculator .
       - echo Docker image built successfully.
 
   post_build:
-    commands:
+     commands:
       - echo Entering post-build phase...
-      - echo Pushing Docker image...
+      - mv build/libs/SalaryCalculator-0.0.1-SNAPSHOT.jar my-app.jar
+      - echo Post-build phase complete
       - docker tag salary_calculator:latest <your-docker-repo>/salary_calculator:latest
       - docker push <your-docker-repo>/salary_calculator:latest
       - echo Post-build phase complete
 
-artifacts:
-  files:
-    - '**/*'
-  discard-paths: yes
+  unit-test-job:
+    test:
+      commands:
+        - echo "Running tests and generating coverage report..."
+        - mvn clean verify
+
+      artifacts:
+        files:
+          - '**/*'
+        discard-paths: yes
 
 cache:
   paths:
