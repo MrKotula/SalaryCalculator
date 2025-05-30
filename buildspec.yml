@@ -4,7 +4,7 @@ phases:
   install:
     commands:
       - echo Installing dependencies...
-      - yum install -y java-17-openjdk-devel wget unzip docker
+      - yum install -y java-17-openjdk-devel wget unzip
       - echo Installing Gradle 8.12.1...
       - wget https://services.gradle.org/distributions/gradle-8.12.1-bin.zip
       - unzip gradle-8.12.1-bin.zip -d /opt/gradle
@@ -27,6 +27,9 @@ phases:
       - echo Building Docker image...
       - docker build -t salary_calculator .
       - echo Docker image built successfully.
+      - echo Saving Docker image as a tar file...
+      - docker save salary_calculator:latest -o salary_calculator_image.tar
+      - echo Docker image saved successfully.
       - echo Build phase complete
 
   post_build:
@@ -38,7 +41,7 @@ phases:
 
 artifacts:
   files:
-    - '**/*'
+    - salary_calculator_image.tar
   discard-paths: yes
 
 cache:
