@@ -1,5 +1,6 @@
 package com.lubaszka.salarycalculator.service.impl;
 
+import com.lubaszka.salarycalculator.model.dto.request.SalaryCalculationListRequest;
 import com.lubaszka.salarycalculator.model.dto.request.SalaryCalculationRequest;
 import com.lubaszka.salarycalculator.service.HolidayService;
 import com.lubaszka.salarycalculator.util.SalaryCalculationUtil;
@@ -12,7 +13,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
@@ -201,6 +201,47 @@ class SalaryCalculationServiceImplTest {
         });
 
         double actualSalary = salaryCalculationService.calculateSalary(salaryCalculationRequest);
+
+        assertEquals(expectedSalary, actualSalary);
+    }
+
+    @Test
+    void calculateSalaryByList_WithRightData_ShouldReturnAdjustedTotalSalary() {
+        double expectedSalary = 690.02;
+
+        double nettoNightShiftValue = 3.89;
+        List<LocalDate> localDateList = List.of(LocalDate.of(2025, 1, 1));
+
+        LocalDateTime startWorkTimeFirst = LocalDateTime.of(2025, 1, 1, 22, 0);
+        LocalDateTime endWorkTimeFirst = LocalDateTime.of(2025, 1, 2, 6, 0);
+        double baseRateFirst = 31.0;
+
+        LocalDateTime startWorkTimeSecond = LocalDateTime.of(2025, 1, 2, 22, 0);
+        LocalDateTime endWorkTimeSecond = LocalDateTime.of(2025, 1, 3, 6, 0);
+        double baseRateSecond = 31.0;
+
+        SalaryCalculationRequest salaryCalculationFirstTestRequest = new SalaryCalculationRequest(
+                startWorkTimeFirst, endWorkTimeFirst, baseRateFirst);
+        SalaryCalculationRequest salaryCalculationSecondTestRequest = new SalaryCalculationRequest(
+                startWorkTimeSecond, endWorkTimeSecond, baseRateSecond);
+
+        List<SalaryCalculationRequest> salaryCalculationTestList = List.of(
+                salaryCalculationFirstTestRequest, salaryCalculationSecondTestRequest);
+
+        SalaryCalculationListRequest salaryCalculationListRequest =
+                new SalaryCalculationListRequest(salaryCalculationTestList);
+
+        when(salaryCalculationUtil.getNettoNightShiftRate(salaryCalculationFirstTestRequest))
+                .thenReturn(nettoNightShiftValue);
+        when(salaryCalculationUtil.getNettoNightShiftRate(salaryCalculationSecondTestRequest))
+                .thenReturn(nettoNightShiftValue);
+        when(holidayService.getHolidayDatesInRange(startWorkTimeFirst.toLocalDate(), endWorkTimeFirst.toLocalDate()))
+                .thenReturn(localDateList);
+        when(holidayService.getHolidayDatesInRange(startWorkTimeSecond.toLocalDate(), endWorkTimeSecond.toLocalDate()))
+                .thenReturn(localDateList);
+        when(salaryCalculationUtil.roundToTwoDecimalPlaces(anyDouble())).thenReturn(expectedSalary);
+
+        double actualSalary = salaryCalculationService.calculateSalaryByList(salaryCalculationListRequest);
 
         assertEquals(expectedSalary, actualSalary);
     }
