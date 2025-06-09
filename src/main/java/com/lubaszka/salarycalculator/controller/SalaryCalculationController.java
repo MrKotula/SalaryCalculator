@@ -35,12 +35,12 @@ public class SalaryCalculationController {
     @GetMapping(BASE_URL + CALCULATE_LIST)
     public String calculateSalaries(Model model) {
         model.addAttribute("requests", new SalaryCalculationListRequest());
+
         return "salaryCalculationListForm";
     }
 
     @PostMapping(BASE_URL + CALCULATE_LIST)
     public String calculateSalaries(@ModelAttribute SalaryCalculationListRequest requests, Model model) {
-        System.out.println("Received requests: " + requests.getSalaryCalculationRequestList());
         model.addAttribute("result", salaryCalculationService.calculateSalaryByList(requests));
 
         return "salaryCalculationListForm";

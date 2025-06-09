@@ -5,6 +5,9 @@ phases:
     commands:
       - echo Installing dependencies...
       - yum install -y java-17-openjdk-devel wget unzip
+      - echo Installing Docker...
+      - yum install -y docker
+      - service docker start
       - echo Installing Gradle 8.12.1...
       - wget https://services.gradle.org/distributions/gradle-8.12.1-bin.zip
       - unzip gradle-8.12.1-bin.zip -d /opt/gradle
