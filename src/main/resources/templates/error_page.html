@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - ${status}</title>
+</head>
+
+<body>
+<h1 th:text="#{error.error_occurred}"></h1>
+<form>
+<p>Status: <strong th:text="${status}"></strong></p>
+<p>Message: <strong th:text="${message}"></strong></p>
+<p>URL: <strong th:text="${url}"></strong></p>
+<p>Timestamp: <strong th:text="${timestamp}"></strong></p>
+</form>
+
+<a th:href="@{/api/lubaszka/salary/calculate}" th:text="#{error.home}"></a>
+</body>
+</html>
