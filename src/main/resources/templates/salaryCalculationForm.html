@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,30 +8,64 @@
     <link rel="stylesheet" th:href="@{/calculator.css}">
 </head>
 <body>
-<h1>Calculate Salary</h1>
+
+<form class="langDropdownMenu" action="/changeLanguage" method="get">
+    <h1 th:text="#{title.calculate_salary}"></h1>
+    <label>
+        <select name="lang" id="lang" onchange="this.form.submit()">
+            <option value="" th:text="#{lang.select}"></option>
+            <option name="lang" value="en" th:text="#{lang.en}"></option>
+            <option name="lang" value="ua" th:text="#{lang.ua}"></option>
+            <option name="lang" value="pl" th:text="#{lang.pl}"></option>
+            <option name="lang" value="es" th:text="#{lang.es}"></option>
+        </select>
+    </label>
+</form>
+
 <form action="/api/lubaszka/salary/calculate" method="POST">
-    <label for="startDateTime">Start Date and Time:</label><br>
+    <label for="startDateTime" th:text="#{input.start_date_time}"></label><br>
     <input type="datetime-local" id="startDateTime" name="startDateTime" required>
     <br><br>
 
-    <label for="endDateTime">End Date and Time:</label><br>
+    <label for="endDateTime" th:text="#{input.end_date_time}"></label><br>
     <input type="datetime-local" id="endDateTime" name="endDateTime" required>
     <br><br>
 
-    <label for="baseRate">Base Rate:</label><br>
+    <label for="baseRate" th:text="#{input.base_rate}"></label><br>
     <input type="number" id="baseRate" name="baseRate" step="0.1" min="0" required>
     <br><br>
-    <a class="linkButton" th:href="@{/api/lubaszka/salary/calculate_list}">Calculate by list</a>
+    <a class="linkButton" th:href="@{/api/lubaszka/salary/calculate_list}" th:text="#{button.calculate_multiple}"></a>
     <br><br>
-    <button type="submit">Calculate</button>
+    <button type="submit" th:text="#{button.calculate}"></button>
 </form>
 
 <div>
-    <h2>Result</h2>
+    <h2 th:text="#{title.salary_result}"></h2>
     <p>
-        <strong>Calculated Salary:</strong>
+        <strong th:text="#{title.calculated_salary}"></strong>
         <span th:text="${salaryResult != null ? salaryResult + ' zł' : ''}"></span>
     </p>
 </div>
+
+<footer class="footerMessage" th:text="#{title.footer}"></footer>
 </body>
+
+<script>
+    // The function sets the date and time to the current hour and minute, rounded to the full hour.
+    function fixDateTimeClock() {
+        let currentDate = new Date();
+
+        currentDate.setMinutes(0);
+        currentDate.setSeconds(0);
+
+        let formattedDate = currentDate.toISOString().slice(0, 16);
+
+        document.getElementById('startDateTime').value = formattedDate;
+        document.getElementById('endDateTime').value = formattedDate;
+    }
+
+    window.onload = function() {
+        fixDateTimeClock();
+    };
+</script>
 </html>

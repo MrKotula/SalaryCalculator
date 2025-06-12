@@ -6,37 +6,53 @@
     <title>Calculate Salary</title>
     <link rel="stylesheet" th:href="@{/calculatorList.css}">
 </head>
+<body>
 
-<h1>Calculate Salary by List</h1>
+<form class="langDropdownMenu" action="/changeLanguage" method="get">
+    <h1 th:text="#{title.calculate_multiply_salaries}"></h1>
+    <label>
+        <select name="lang" id="lang" onchange="this.form.submit()">
+            <option value="" th:text="#{lang.select}"></option>
+            <option name="lang" value="en" th:text="#{lang.en}"></option>
+            <option name="lang" value="ua" th:text="#{lang.ua}"></option>
+            <option name="lang" value="pl" th:text="#{lang.pl}"></option>
+            <option name="lang" value="es" th:text="#{lang.es}"></option>
+        </select>
+    </label>
+</form>
+
 <form id="salaryForm" action="/api/lubaszka/salary/calculate_list" method="POST" th:object="${requests}">
-    <div id="salaryRequestList">
+    <div class="subForm" id="salaryRequestList">
         <div class="salaryRequest" id="request-0">
-            <h4>Request 1</h4>
+            <h4 th:text="#{title.first_salary_request}"></h4>
 
-            <label for="salaryCalculationRequestList[0].startDateTime">Start Date and Time:</label><br>
+            <label for="salaryCalculationRequestList[0].startDateTime" th:text="#{input.start_date_time}"></label><br>
             <input type="datetime-local" id="salaryCalculationRequestList[0].startDateTime" name="salaryCalculationRequestList[0].startDateTime" required><br><br>
 
-            <label for="salaryCalculationRequestList[0].endDateTime">End Date and Time:</label><br>
+            <label for="salaryCalculationRequestList[0].endDateTime" th:text="#{input.end_date_time}"></label><br>
             <input type="datetime-local" id="salaryCalculationRequestList[0].endDateTime" name="salaryCalculationRequestList[0].endDateTime" required><br><br>
 
-            <label for="salaryCalculationRequestList[0].baseRate">Base Rate:</label><br>
+            <label for="salaryCalculationRequestList[0].baseRate" th:text="#{input.base_rate}"></label><br>
             <input type="number" id="salaryCalculationRequestList[0].baseRate" name="salaryCalculationRequestList[0].baseRate" step="0.1" min="0" required><br><br>
         </div>
     </div>
 
     <br><br>
-    <a class="linkButton" th:href="@{/api/lubaszka/salary/calculate}">Simple calculate</a>
-    <button type="button" onclick="addRequest()">Add Salary Calculation Request</button>
-    <button type="submit">Submit</button>
+    <a class="linkButton" th:href="@{/api/lubaszka/salary/calculate}" th:text="#{button.simple_calculate}"></a>
+    <button type="button" onclick="addRequest()" th:text="#{button.add_salary_calc_request}"></button>
+    <button type="submit" th:text="#{button.calculate}"></button>
 
     <div>
-        <h2>Result</h2>
+        <h2 th:text="#{title.salary_result}">Result</h2>
         <p>
-            <strong>Calculated Salary:</strong>
+            <strong th:text="#{title.calculated_salary}"></strong>
             <span th:text="${result != null ? result + ' zł' : ''}"></span>
         </p>
     </div>
 </form>
+
+<footer class="footerMessage" th:text="#{title.footer}"></footer>
+</body>
 
 <script>
     let counter = 1;
@@ -50,22 +66,23 @@
 
         const container = document.getElementById('salaryRequestList');
         const newItem = `
-            <div class="salaryRequest" id="request-${counter}">
-                <h4>Request ${counter + 1}</h4>
+                <div class="salaryRequest" id="request-${counter}">
+                    <h4>Request ${counter + 1}</h4>
 
-                <label for="salaryCalculationRequestList[${counter}].startDateTime">Start Date and Time:</label><br>
-                <input type="datetime-local" id="salaryCalculationRequestList[${counter}].startDateTime" name="salaryCalculationRequestList[${counter}].startDateTime" required><br><br>
+                    <label for="salaryCalculationRequestList[${counter}].startDateTime">Start Date and Time:</label><br>
+                    <input type="datetime-local" id="salaryCalculationRequestList[${counter}].startDateTime" name="salaryCalculationRequestList[${counter}].startDateTime" required><br><br>
 
-                <label for="salaryCalculationRequestList[${counter}].endDateTime">End Date and Time:</label><br>
-                <input type="datetime-local" id="salaryCalculationRequestList[${counter}].endDateTime" name="salaryCalculationRequestList[${counter}].endDateTime" required><br><br>
+                    <label for="salaryCalculationRequestList[${counter}].endDateTime">End Date and Time:</label><br>
+                    <input type="datetime-local" id="salaryCalculationRequestList[${counter}].endDateTime" name="salaryCalculationRequestList[${counter}].endDateTime" required><br><br>
 
-                <label for="salaryCalculationRequestList[${counter}].baseRate">Base Rate:</label><br>
-                <input type="number" id="salaryCalculationRequestList[${counter}].baseRate" name="salaryCalculationRequestList[${counter}].baseRate" step="0.1" min="0" required><br><br>
+                    <label for="salaryCalculationRequestList[${counter}].baseRate">Base Rate:</label><br>
+                    <input type="number" id="salaryCalculationRequestList[${counter}].baseRate" name="salaryCalculationRequestList[${counter}].baseRate" step="0.1" min="0" required><br><br>
 
-                <button type="button" onclick="removeSpecificRequest('request-${counter}')">Remove</button>
-            </div>
-        `;
+                    <button type="button" onclick="removeSpecificRequest('request-${counter}')">Remove</button>
+                </div>
+            `;
         container.insertAdjacentHTML('beforeend', newItem);
+        fixDateTimeClock(counter);
         counter++;
     }
 
@@ -87,5 +104,22 @@
             counter--;
         }
     }
+
+    // The function sets the date and time to the current hour and minute, rounded to the full hour.
+    function fixDateTimeClock(counter) {
+        let currentDate = new Date();
+
+        currentDate.setMinutes(0);
+        currentDate.setSeconds(0);
+
+        let formattedDate = currentDate.toISOString().slice(0, 16);
+
+        document.getElementById(`salaryCalculationRequestList[${counter}].startDateTime`).value = formattedDate;
+        document.getElementById(`salaryCalculationRequestList[${counter}].endDateTime`).value = formattedDate;
+    }
+
+    window.onload = function() {
+        fixDateTimeClock(0);
+    };
 </script>
 </html>
